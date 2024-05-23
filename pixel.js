@@ -12,7 +12,9 @@ fetch("https://zagonfatwjnxvuygtboi.supabase.co/rest/v1/pixels_map?select=*", {
             headers: headersList,
         }).then((ress) => {
             ress.json().then((userData) => {
-                console.log(userData);
+                data.sort((a, b) => {
+                    return a.pixel_index - b.pixel_index;
+                });
                 generateTable(data, userData);
             });
         });
@@ -32,7 +34,7 @@ function generateTable(data, userData) {
     }
 
     // Generate table headers
-    const headers = ["username", "color", "link"];
+    const headers = ["username", "pixel position", "color", "link"];
     const headerRow = document.createElement("tr");
     headers.forEach((header) => {
         const th = document.createElement("th");
@@ -74,6 +76,8 @@ function generateTable(data, userData) {
             } else if (header.toLowerCase() === "username") {
                 const username = findPlayerById(userData, item["owner_id"]);
                 td.textContent = username.username;
+            } else if (header.toLowerCase() === "pixel position") {
+                td.textContent = item["pixel_index"];
             } else {
                 td.textContent = item[header];
             }
